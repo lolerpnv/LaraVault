@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -45,21 +46,24 @@ class AssetController extends Controller
             'assets' => $assets,
         ]);
     }
+
+    //download return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
     public function getAsset(Request $request,$name)
     {
-
         $file = DB::table('assets')->where('reference','=',$name)->get();
-        if($request->user()){
+        if (Auth::guard(null)->guest()){
+            if($file[0]->private == 'off'){
+            return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
+            }else{return redirect('/');}
+        }
+        else{
             $user_id = DB::table('users')->where('email','=',$request->user()->email)->get();
-        }else {$user_id = null;}
+            if($file[0]->user_id == $user_id[0]->id){
+                return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
+            }else{
 
-        if($file[0]->private == 'off'){
-            return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
+            }
         }
-        else if($file[0]->user_id == $user_id[0]->id){
-            return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
-        }
-        else return redirect('/');
     }
     public function destroy(Request $request,$name)
     {
