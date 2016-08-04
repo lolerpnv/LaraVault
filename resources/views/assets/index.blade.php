@@ -19,6 +19,7 @@
                         <th>Asset</th>
                         <th>Size</th>
                         <th>Private</th>
+                        <th>Downloads</th>
                         <th>Link</th>
                         <th>-</th>
                     </tr>
@@ -37,6 +38,9 @@
                             </td>
                             <td class="table-text">
                                 <div>{{ $asset->private }}</div>
+                            </td>
+                            <td class="table-text">
+                                <div>{{$asset->downloads}}</div>
                             </td>
                             <td class="table-text">
                                 <div><a href="{{ 'file/'.$asset->reference }}">Click</a> </div>

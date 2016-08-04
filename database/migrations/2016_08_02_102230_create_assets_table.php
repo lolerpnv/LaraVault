@@ -19,7 +19,8 @@ class CreateAssetsTable extends Migration
             $table->string('name',80);
             $table->string('reference');
             $table->integer('size');
-            $table->tinyinteger('private');
+            $table->string('private',4);
+            $table->mediuminteger('downloads');
             $table->timestamps();
         });
     }

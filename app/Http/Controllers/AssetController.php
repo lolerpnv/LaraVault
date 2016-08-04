@@ -31,7 +31,8 @@ class AssetController extends Controller
             'reference' => md5($file->getClientOriginalName().$request->user()),
             'user_id' => $request->user(),
             'size' => $file->getClientSize(),
-            'private' => $private
+            'private' => $private,
+            'downloads' => 0
         ]))
             //Save file
             $file->move(storage_path().'/app',md5($file->getClientOriginalName().$request->user()));
@@ -55,7 +56,8 @@ class AssetController extends Controller
         if (Auth::guard(null)->guest()){
 
             if($file[0]->private == 'off'){
-            return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
+                DB::table('assets')->where('reference','=',$name)->increment('downloads');
+                return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
 
             }else {
                 return redirect('/');}
@@ -64,6 +66,7 @@ class AssetController extends Controller
             $user_id = DB::table('users')->where('email','=',$request->user()->email)->get();
 
             if($file[0]->user_id == $user_id[0]->id || $file[0]->private == 'off'){
+                DB::table('assets')->where('reference','=',$name)->increment('downloads');
                 return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
             }else{
                 return redirect('/');}
