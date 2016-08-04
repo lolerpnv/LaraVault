@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -70,6 +71,8 @@ class AssetController extends Controller
     }
     public function destroy(Request $request,$name)
     {
-        print_r(DB::table('assets')->where('reference','=',$name)->get());
+        $res = "one : ".DB::table('assets')->where('reference','=',$name)->delete();
+        $res .= "two : ".Storage::delete(storage_path().'/app/'.$name);
+        return redirect('/home');
     }
 }
