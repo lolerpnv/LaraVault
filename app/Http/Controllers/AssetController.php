@@ -52,7 +52,12 @@ class AssetController extends Controller
     //download return response()->download(storage_path().'/app/'.$file[0]->reference,$file[0]->name);
     public function getAsset(Request $request,$name)
     {
-        $file = DB::table('assets')->where('reference','=',$name)->get();
+        //get file
+        if(sizeof($file = DB::table('assets')->where('reference','=',$name)->get())<1)
+        {
+            return redirect('/');
+        }
+        //if guest
         if (Auth::guard(null)->guest()){
 
             if($file[0]->private == 'off'){
@@ -62,6 +67,7 @@ class AssetController extends Controller
             }else {
                 return redirect('/');}
         }
+        //else user
         else{
             $user_id = DB::table('users')->where('email','=',$request->user()->email)->get();
 

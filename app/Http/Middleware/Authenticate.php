@@ -17,6 +17,7 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        //Special case for guests accessing public files
         if(strstr($request->fullUrl(),url('/')."/file/")){
             return $next($request);
         }
