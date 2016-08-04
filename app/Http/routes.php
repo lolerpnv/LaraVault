@@ -11,14 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/upload',  ['middleware' => 'auth',function () {
     return view('assets.upload');
 }]);
 
 Route::get('/files', [ 'middleware' => 'auth',
+                    'uses' => 'AssetController@index']);
+
+Route::get('/file/', [ 'middleware' => 'auth',
                     'uses' => 'AssetController@index']);
 
 Route::get('/file/{name}', 'AssetController@getAsset');
@@ -32,3 +32,4 @@ Route::delete('/file/{name}', [ 'middleware' => 'auth',
 Route::auth();
 
 Route::get('/home', 'AssetController@index');
+Route::get('/', 'AssetController@index');
